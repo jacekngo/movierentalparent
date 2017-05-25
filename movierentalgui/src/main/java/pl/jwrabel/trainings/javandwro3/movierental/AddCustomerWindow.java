@@ -1,16 +1,23 @@
 package pl.jwrabel.trainings.javandwro3.movierental;
 
+import pl.jwrabel.trainings.javandwro3.movierental.exceptions.NullCustomerException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 
 /**
  * Created by RENT on 2017-05-24.
  */
 public class AddCustomerWindow extends JFrame {
-    public AddCustomerWindow() {
+    private MovieMain movieMain;
+    private MovieRental movieRental;
+    public AddCustomerWindow(MovieRental movieRental, MovieMain movieMain ) {
+        this.movieMain=movieMain;
+        this.movieRental=movieRental;
         setVisible(true);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(400, 600);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setSize(400, 400);
         setLayout(null);
 
         JLabel name = new JLabel("Imię");
@@ -58,21 +65,25 @@ public class AddCustomerWindow extends JFrame {
         addCustomerButton.setLocation(80, 180);
         add(addCustomerButton);
 
-        JTextField message = new JTextField();
-        message.setSize(350, 300);
-        message.setLocation(10, 250);
-        add(message);
 
         addCustomerButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String firstName = txtName.getText();
-
+                String lastName = txtSurname.getText();
+                String pesel = txtPesel.getText();
+                String city = txtCity.getText();
+                Date date = new Date();
+                try {
+                    movieRental.addCustomer(new Customer(pesel,firstName, lastName, city, date));
+                } catch (NullCustomerException e1) {
+                    e1.printStackTrace();
+                }
+                movieMain.refresh();
             }
 
     });}
 
-    public static void main(String[] args) {
-    new AddCustomerWindow();
+    public static void main(String[] args){
     }
 }

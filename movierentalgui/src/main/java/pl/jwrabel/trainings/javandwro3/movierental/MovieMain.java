@@ -1,5 +1,7 @@
 package pl.jwrabel.trainings.javandwro3.movierental;
 
+import pl.jwrabel.trainings.javandwro3.movierental.exceptions.NullCustomerException;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -11,7 +13,8 @@ public class MovieMain extends JFrame {
     private JList<Customer> customersJList;
     private JList<Movie> movieJList;
     private JList<Rent> rentJList;
-    public   MovieRental movieRental;
+    private   MovieRental movieRental;
+    private Customer customerToEdit;
 
     public MovieMain() {
         setVisible(true);
@@ -42,6 +45,21 @@ public class MovieMain extends JFrame {
         btnShow.setSize(100, 30);
         btnShow.setLocation(220, 510);
         add(btnShow);
+
+        JButton addCustomerButton = new JButton("Dodaj klienta");
+        addCustomerButton.setSize(100, 30);
+        addCustomerButton.setLocation(340, 510);
+        add(addCustomerButton);
+
+        MovieMain thisMM = this;
+        addCustomerButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            new AddCustomerWindow(movieRental, thisMM);
+            }
+
+        });
+
 
         //
 //        updateCarsListData();
@@ -123,6 +141,7 @@ public class MovieMain extends JFrame {
 //                carRepository.getCars().remove(selectedCar);
 //                updateCarsListData();
 //            }
+        repaint();
         }
 
     public static void main(String[] args) {
@@ -151,5 +170,24 @@ public class MovieMain extends JFrame {
         rentJList = new JList<>();
         rentJList.setListData(rentArray);
     }
+
+    public void refresh (){
+
+        List <Customer> customerList = movieRental.getCustomers();
+        Customer [] customersArray = customerList.toArray(new Customer[customerList.size()]); //!!!! trzeba jej podać listę
+
+        List<Movie> movieList = movieRental.getMovies();
+        Movie [] movieArray = movieList.toArray(new Movie[movieList.size()]);
+
+        List<Rent> rentList = movieRental.getRents();
+        Rent [] rentArray = rentList.toArray(new Rent[rentList.size()]);
+
+        customersJList.setListData(customersArray);
+
+        movieJList.setListData(movieArray);
+
+        rentJList.setListData(rentArray);
+    }
+
 
 }
